@@ -42,7 +42,7 @@ public class DebitCardApplicationTest {
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(By.cssSelector("button")).click();
         String actual = driver.findElement(By.cssSelector("[data-test-id='order-success']")).getText().trim();
-        String expected = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.";
+        String expected = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время";
         assertEquals(expected, actual);
     }
 
@@ -66,7 +66,7 @@ public class DebitCardApplicationTest {
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(By.cssSelector("button")).click();
         String actual = driver.findElement(By.cssSelector("[data-test-id='phone'] .input__sub")).getText().trim();
-        String expected = "Поле обязательно для заполнения";
+        String expected = "Поле обязательно для заполнения.";
         assertEquals(expected, actual);
     }
 
