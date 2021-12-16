@@ -26,6 +26,7 @@ public class DebitCardApplicationTest {
         options.addArguments("--no-sandbox");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
+        driver.get("http://localhost:9999");
     }
 
     @AfterEach
@@ -36,7 +37,6 @@ public class DebitCardApplicationTest {
 
     @Test
     public void shouldSendFormPositive() {
-        driver.get("http://localhost:9999");
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Анна Попова");
         driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79227837015");
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
@@ -48,49 +48,55 @@ public class DebitCardApplicationTest {
 
     @Test
     public void shouldSendFormWhenNameFieldEmpty() {
-        driver.get("http://localhost:9999");
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("");
         driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79227837015");
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(By.cssSelector("button")).click();
-        String actual = driver.findElement(By.cssSelector("[data-test-id='name'] .input__sub")).getText().trim();
+        String actual = driver.findElement(By.cssSelector("[data-test-id='name'].input_invalid .input__sub")).getText().trim();
         String expected = "Поле обязательно для заполнения";
         assertEquals(expected, actual);
     }
 
     @Test
     public void shouldSendFormWhenPhoneFieldEmpty() {
-        driver.get("http://localhost:9999");
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Анна Попова");
         driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("");
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(By.cssSelector("button")).click();
-        String actual = driver.findElement(By.cssSelector("[data-test-id='phone'] .input__sub")).getText().trim();
+        String actual = driver.findElement(By.cssSelector("[data-test-id='phone'].input_invalid .input__sub")).getText().trim();
         String expected = "Поле обязательно для заполнения";
         assertEquals(expected, actual);
     }
 
     @Test
     public void shouldSendFormWhenNameFieldInvalid() {
-        driver.get("http://localhost:9999");
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Anna Popova");
         driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79227837015");
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(By.cssSelector("button")).click();
-        String actual = driver.findElement(By.cssSelector("[data-test-id='name'] .input__sub")).getText().trim();
+        String actual = driver.findElement(By.cssSelector("[data-test-id='name'].input_invalid .input__sub")).getText().trim();
         String expected = "Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.";
         assertEquals(expected, actual);
     }
 
     @Test
     public void shouldSendFormWhenPhoneFieldInvalid() {
-        driver.get("http://localhost:9999");
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Анна Попова");
         driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+792278370");
         driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(By.cssSelector("button")).click();
-        String actual = driver.findElement(By.cssSelector("[data-test-id='phone'] .input__sub")).getText().trim();
+        String actual = driver.findElement(By.cssSelector("[data-test-id='phone'].input_invalid .input__sub")).getText().trim();
         String expected = "Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.";
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldSendFormWhenCheckboxNotClick() {
+        driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Анна Попова");
+        driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79227837015");
+        driver.findElement(By.cssSelector("button")).click();
+        String actual = driver.findElement(By.cssSelector("[data-test-id='agreement'].input_invalid .checkbox__text")).getText().trim();
+        String expected = "Я соглашаюсь с условиями обработки и использования моих персональных данных и разрешаю сделать запрос в бюро кредитных историй";
         assertEquals(expected, actual);
     }
 }
